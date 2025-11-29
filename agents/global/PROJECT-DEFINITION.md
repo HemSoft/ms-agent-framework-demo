@@ -1,7 +1,7 @@
 ---
 title: "Project Definition"
-version: "1.0.2"
-lastModified: "2025-11-28"
+version: "1.0.3"
+lastModified: "2025-11-29"
 author: "Franz Hemmer"
 purpose: "High-level mission, architecture, extension points, and operational model of Agent Demo."
 ---
@@ -16,9 +16,9 @@ Purpose-built reference guide for future automation and contributors. Complement
 
 **What:** Console-based AI agent demo showcasing Microsoft.Extensions.AI with tool-calling capabilities via OpenRouter.
 
-**Core Stack:** .NET 10, Microsoft.Extensions.AI, OpenAI SDK (via OpenRouter), Spectre.Console
+**Core Stack:** .NET 10, Microsoft.Extensions.AI, OpenAI SDK (via OpenRouter), Spectre.Console, Microsoft Graph SDK
 
-**Key Features:** File system tools (ListFiles, CountFiles, CreateFolder, GetFileInfo), interactive chat loop
+**Key Features:** Terminal commands, web search, Outlook mail integration (inbox, read, send, search, delete, move)
 
 **Architecture:** Simple console app with tool registration via AIFunctionFactory
 
@@ -26,7 +26,7 @@ Purpose-built reference guide for future automation and contributors. Complement
 
 **Testing:** xUnit + Moq; test coverage via coverlet/ReportGenerator; see `agents/global/TESTING.md`
 
-**Required Config:** `OPENROUTER_API_KEY` environment variable
+**Required Config:** `OPENROUTER_API_KEY`, `OPENROUTER_BASE_URL`, optional `GRAPH_CLIENT_ID` for mail
 
 ---
 
@@ -88,7 +88,9 @@ Configuration via environment variables:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `OPENROUTER_API_KEY` | Yes | OpenRouter API key for LLM access |
-| `OPENROUTER_BASE_URL` | No | Override API endpoint (defaults to `https://openrouter.ai/api/v1`) |
+| `OPENROUTER_BASE_URL` | Yes | OpenRouter endpoint URL |
+| `GRAPH_CLIENT_ID` | For Mail | Azure app registration client ID |
+| `GRAPH_TENANT_ID` | No | Defaults to "consumers" for personal accounts |
 
 Operational characteristics:
 

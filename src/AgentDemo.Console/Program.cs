@@ -72,6 +72,7 @@ internal static class Program
             [
                 AIFunctionFactory.Create(TerminalTools.Execute),
                 AIFunctionFactory.Create(WebSearchTools.SearchAsync),
+                AIFunctionFactory.Create(OutlookMailTools.MailAsync),
             ],
         };
 
