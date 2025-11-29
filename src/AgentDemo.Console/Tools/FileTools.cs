@@ -13,76 +13,80 @@ using System.IO;
 internal static class FileTools
 {
     /// <summary>
-    /// Lists all files in the specified directory path.
+    /// Lists files in the specified directory (non-recursive).
     /// </summary>
-    /// <param name="path">The directory path to list files from.</param>
-    /// <returns>An array of file names in the directory.</returns>
-    [Description("Lists all files in the specified directory path and returns their names")]
+    /// <param name="path">The directory path.</param>
+    /// <returns>An array of file names.</returns>
+    [Description("Lists files in a directory (non-recursive, top-level only)")]
     public static string[] ListFiles(string path)
     {
-        System.Console.WriteLine($"[Tool] ListFiles called with path: {path}");
+        System.Console.WriteLine($"[Tool] ListFiles: {path}");
 
-        if (!Directory.Exists(path))
-        {
-            return [$"Directory not found: {path}"];
-        }
-
-        var files = Directory.GetFiles(path)
-            .Select(Path.GetFileName)
-            .Where(f => f is not null)
-            .Cast<string>()
-            .ToArray();
-
-        System.Console.WriteLine($"[Tool] Found {files.Length} files");
-        return files;
+        return !Directory.Exists(path)
+            ? [$"Directory not found: {path}"]
+            : [.. Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly)
+                .Take(100)
+                .Select(Path.GetFileName)
+                .Where(f => f is not null)
+                .Cast<string>()];
     }
 
     /// <summary>
-    /// Counts the number of files in the specified directory.
+    /// Counts files in the specified directory (non-recursive).
     /// </summary>
-    /// <param name="path">The directory path to count files in.</param>
-    /// <returns>The number of files, or -1 if the directory does not exist.</returns>
-    [Description("Counts the number of files in the specified directory path")]
-    public static int CountFiles(string path) =>
-        !Directory.Exists(path) ? -1 : Directory.GetFiles(path).Length;
+    /// <param name="path">The directory path.</param>
+    /// <returns>The file count, or -1 if not found.</returns>
+    [Description("Counts files in a directory (non-recursive, top-level only)")]
+    public static int CountFiles(string path)
+    {
+        System.Console.WriteLine($"[Tool] CountFiles: {path}");
+
+        return !Directory.Exists(path)
+            ? -1
+            : Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly).Count();
+    }
 
     /// <summary>
-    /// Creates a new folder at the specified path.
+    /// Creates a folder at the specified path.
     /// </summary>
-    /// <param name="path">The path where the folder should be created.</param>
-    /// <returns>A message indicating success or failure.</returns>
+    /// <param name="path">The folder path to create.</param>
+    /// <returns>Result message.</returns>
     [Description("Creates a new folder at the specified path")]
     public static string CreateFolder(string path)
     {
+        System.Console.WriteLine($"[Tool] CreateFolder: {path}");
+
         try
         {
             Directory.CreateDirectory(path);
-            return $"Folder created: {path}";
+            return $"Created: {path}";
         }
-        catch (UnauthorizedAccessException ex)
+        catch (UnauthorizedAccessException)
         {
-            return $"Access denied: {ex.Message}";
+            return $"Access denied: {path}";
         }
         catch (IOException ex)
         {
-            return $"IO error: {ex.Message}";
+            return $"Error: {ex.Message}";
         }
     }
 
     /// <summary>
-    /// Gets information about a file.
+    /// Gets basic file information.
     /// </summary>
-    /// <param name="filePath">The path to the file.</param>
-    /// <returns>A string containing file name, size, and last modified date.</returns>
-    [Description("Gets information about a file including size and last modified date")]
+    /// <param name="filePath">The file path.</param>
+    /// <returns>File info string.</returns>
+    [Description("Gets file information (name, size, modified date)")]
     public static string GetFileInfo(string filePath)
     {
+        System.Console.WriteLine($"[Tool] GetFileInfo: {filePath}");
+
         if (!File.Exists(filePath))
         {
-            return $"File not found: {filePath}";
+            return $"Not found: {filePath}";
         }
 
         var info = new FileInfo(filePath);
-        return $"Name: {info.Name}, Size: {info.Length} bytes, Modified: {info.LastWriteTime}";
+        return $"{info.Name} | {info.Length:N0} bytes | {info.LastWriteTime:g}";
     }
 }

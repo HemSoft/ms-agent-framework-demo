@@ -5,7 +5,6 @@
 namespace AgentDemo.Console;
 
 using System.ClientModel;
-using System.Diagnostics;
 using AgentDemo.Console.Tools;
 using Microsoft.Extensions.AI;
 using OpenAI;
@@ -129,8 +128,8 @@ internal static class Program
     {
         try
         {
+            using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(2));
             ChatResponse? response = null;
-            var stopwatch = Stopwatch.StartNew();
 
             await AnsiConsole.Status()
                 .Spinner(Spinner.Known.Dots)
@@ -138,12 +137,8 @@ internal static class Program
                 .StartAsync("Thinking...", async ctx =>
                 {
                     ctx.Status("Calling API...");
-                    AnsiConsole.MarkupLine("[dim][[DEBUG]] Starting API call...[/]");
 
-                    response = await chatClient.GetResponseAsync(history, tools).ConfigureAwait(false);
-
-                    stopwatch.Stop();
-                    AnsiConsole.MarkupLine($"[dim][[DEBUG]] API call completed in {stopwatch.ElapsedMilliseconds}ms[/]");
+                    response = await chatClient.GetResponseAsync(history, tools, cts.Token).ConfigureAwait(false);
                 })
                 .ConfigureAwait(false);
 
