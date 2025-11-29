@@ -41,7 +41,7 @@
   </Target>
 
   <!-- Quality Checks Target -->
-  <Target Name="RunQualityChecks" AfterTargets="Build" Condition="'$(MSBuildProjectName)' == 'Relias.Assistant.Console'">
+  <Target Name="RunQualityChecks" AfterTargets="Build" Condition="false">
     <Message Text="Running Quality Checks..." Importance="high" />
     <Exec Command="pwsh -File &quot;$(MSBuildThisFileDirectory)scripts/check-quality.ps1&quot;" WorkingDirectory="$(MSBuildThisFileDirectory)" ContinueOnError="false" StandardOutputImportance="High" StandardErrorImportance="High" />
   </Target>

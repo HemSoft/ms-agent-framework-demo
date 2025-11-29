@@ -20,6 +20,10 @@ obj/
 .idea/
 *.sln.iml
 
+## Test Results
+TestResults/
+coverage-report/
+
 ## User-specific files
 appsettings.Development.json
 appsettings.Local.json
