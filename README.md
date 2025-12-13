@@ -1,5 +1,7 @@
 # Agent Demo
 
+> ⚠️ **NOTICE**: This repository has been discontinued. Development continues in [hemsoft-power-ai](https://github.com/HemSoft/hemsoft-power-ai).
+
 AI agent demo using Microsoft.Extensions.AI with tool-calling capabilities via OpenRouter.
 
 ## Features
